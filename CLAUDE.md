@@ -24,6 +24,8 @@
   sem START/SELECT; btn retorna false ou numero 0-255; as docs dizem cor RGB555, MAS o lupi-codec oficial gera BGR555 e o primeiro-jogo usa direto -> use BGR555; tem ui.circ, ui.stat, sfx.*.
 - Todo frame: ui.clip(0,0,480,270), ui.camera(0,0) e reaplicar a paleta (padrao do primeiro-jogo oficial).
 - No console `Sprites.<pasta>[nome]` NAO tem width/height (so no SDK): guarde o tamanho do PNG numa constante.
+- NAO use ui.btnp no console: ele repete enquanto segura (estilo PICO-8; pausa despausava sozinha). Detecte o toque com ui.btn (agora e nao no frame anterior), 1x por frame.
+- Lua: no maximo 200 locais ativos no chunk principal (erro 'too many local variables'). Agrupe modulos em blocos do...end e exporte so o necessario.
 - Detectar com `BTN_X ~= nil`. NUNCA usar numero cru de botao no console (erro = tela preta).
 - src/game.lua e um loader que roda src/jogo.lua com pcall e mostra o erro NA TELA.
 - Deploy no console: fork github.com/davidogral/primeiro-jogo (de lupi-org-br/primeiro-jogo), com game.lua + jogo.lua na raiz.
