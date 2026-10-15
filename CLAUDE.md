@@ -26,6 +26,7 @@
 - No console `Sprites.<pasta>[nome]` NAO tem width/height (so no SDK): guarde o tamanho do PNG numa constante.
 - NAO use ui.btnp no console: ele repete enquanto segura (estilo PICO-8; pausa despausava sozinha). Detecte o toque com ui.btn (agora e nao no frame anterior), 1x por frame.
 - Lua: no maximo 200 locais ativos no chunk principal (erro 'too many local variables'). Agrupe modulos em blocos do...end e exporte so o necessario.
+- Evite ui.clip por objeto todo frame no console (ex.: animar spritesheet recortando com clip): travou o jogo com muitos tiros. Prefira desenho em codigo ou 1 sprite por quadro.
 - Detectar com `BTN_X ~= nil`. NUNCA usar numero cru de botao no console (erro = tela preta).
 - src/game.lua e um loader que roda src/jogo.lua com pcall e mostra o erro NA TELA.
 - Deploy no console: fork github.com/davidogral/primeiro-jogo (de lupi-org-br/primeiro-jogo), com game.lua + jogo.lua na raiz.
