@@ -13,6 +13,8 @@
 - PNG: max 512x512, ate 256 cores. O codec gera palette.lua (`Palette`) e os sprites usam os indices 0..#Palette-1:
   aplique `Palette` e ponha as cores do jogo DEPOIS (BASE = #Palette), senao os sprites ficam com cor errada.
 - Naves: src/naves/sparrow-cream.png e sparrow-slate.png (Cozy Space Ships, Bramble & Byte, CC-BY 4.0, credito no titulo).
+- Asteroides: src/asteroides/meteorGrey_{med1,small1,tiny1}.png (Space Shooter Redux, Kenney, CC0), copiados sem alteracao.
+  Evento CHUVA DE ASTEROIDES usa esses sprites; tamanhos ficam em AST_TIPOS (o console nao informa width).
   Girados 90 graus horario (apontam para a direita) a pedido do usuario em 2026-10-15; a CPU e espelhada no codigo. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
 - Mapas Tiled (.json) viram script Lua.
 
