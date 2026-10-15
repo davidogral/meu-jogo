@@ -6,25 +6,31 @@
 - Mudancas pequenas e rapidas. Nao refatore o que ja funciona. Mantenha o jogo sempre rodando.
 
 ## Plataforma
-- Lua 5.4. Tela 480x270, 60 FPS fixos (nao precisa de delta time).
+- Lua 5.5 (lupinho 1.1.0; `for` vars sao read-only, `global` e palavra reservada). Tela 480x270, 60 FPS fixos (nao precisa de delta time).
 - Entrada: src/game.lua, que define `update()`, chamada todo frame (logica + desenho).
-- Dev: `make run` -> http://localhost:3000/webgame/game.html (rebuild ao salvar).
+- Dev: container Docker lupi-sdk na porta 8765 -> http://localhost:8765/webgame/game.html (rebuild ao salvar src/).
+- Commit: .gitignore ignora src/, entao SEMPRE `git add -f src/ CLAUDE.md`.
 - PNG: max 512x512, ate 256 cores. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
 - Mapas Tiled (.json) viram script Lua.
 
 ## API (namespace ui)
-Cores sao indices de paleta 0-255. `ui.palset(i, bgr555)` define a cor.
+Cores sao indices de paleta 0-255. `ui.palset(i, bgr555)` define a cor: bits 0-4 = R, 5-9 = G, 10-14 = B
+(0x001F vermelho, 0x03E0 verde, 0x7C00 azul). Indice 0 = TRANSPARENTE (aparece preto).
 - ui.cls(cor)
 - ui.rect(x1,y1,x2,y2,cor) / ui.rectfill(x1,y1,x2,y2,cor)
 - ui.draw_rect(x,y,w,h,filled,cor)
 - ui.circfill(x,y,r,cor) / ui.draw_circle(cx,cy,r,filled,cor,border,border_cor)
 - ui.trisfill(x1,y1,x2,y2,x3,y3,cor)
 - ui.line(x1,y1,x2,y2,cor)
-- ui.print(texto,x,y,cor)  -- evite acentos
+- ui.print(texto,x,y,cor)  -- fonte 5x8, avanco 6px/char (centro: x = W/2 - #txt*3); so ASCII 32-126
 - ui.spr(sprite,x,y,flipped) / ui.tile(tileset,idx,x,y) / ui.map(layer,camx,camy)
 - ui.camera(x,y) (ui.camera() reseta) / ui.clip(x,y,w,h) / ui.fillp(...)
 - ui.btn(botao,pad) segurado / ui.btnp(botao,pad) recem-apertado
   Botoes: UP DOWN LEFT RIGHT BTN_Z BTN_Q BTN_E BTN_F BTN_G
+  Teclado (sempre checado, IGNORA o pad): UP/LEFT/DOWN/RIGHT = W/A/S/D (setas NAO funcionam),
+  BTN_Z = K (RIGHT_FACE_DOWN; o C define BTN_Z duas vezes e esta vence), BTN_Q = L, BTN_E = M,
+  BTN_F = G, BTN_G = H. Tecla Z nao faz nada. Console tem 1 controle = pad 0.
+- update(frame) recebe o contador de frames como argumento.
 - ui.log(msg) / ui.mid(a,b,c)
 - NAO existe API de som.
 
