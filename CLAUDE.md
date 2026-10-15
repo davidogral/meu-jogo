@@ -5,7 +5,8 @@
 - Assets vem de fora e ficam em src/ (ex: src/player/f1.png). So referencie os que existem.
 - Mudancas pequenas e rapidas. Nao refatore o que ja funciona. Mantenha o jogo sempre rodando.
 
-- Capa: icon.gif 64x64 com NO MAXIMO 15 cores (regra do console), raiz do repo e do fork; gerado pela IA a pedido do usuario em 2026-10-15:
+- Capa: icon.gif 64x64, ate 30 quadros (1o = parado, demais = animacao ao selecionar), max 15 cores + 1 transparente,
+  paleta global unica, delay 9, loop, quadros cheios; raiz do repo e do fork; gerado pela IA a pedido do usuario em 2026-10-15:
   estrelas e chama desenhadas por script + sprite sparrow-cream colado sem alteracao.
 
 ## Plataforma
