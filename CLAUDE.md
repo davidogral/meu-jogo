@@ -5,6 +5,9 @@
 - Assets vem de fora e ficam em src/ (ex: src/player/f1.png). So referencie os que existem.
 - Mudancas pequenas e rapidas. Nao refatore o que ja funciona. Mantenha o jogo sempre rodando.
 
+- Capa: icon.gif 64x32 (raiz do repo e do fork), gerado pela IA a pedido do usuario em 2026-10-15:
+  estrelas e chama desenhadas por script + sprite sparrow-cream colado sem alteracao.
+
 ## Plataforma
 - Lua 5.5 (lupinho 1.1.0; `for` vars sao read-only, `global` e palavra reservada). Tela 480x270, 60 FPS fixos (nao precisa de delta time).
 - Entrada: src/game.lua, que define `update()`, chamada todo frame (logica + desenho).
