@@ -21,6 +21,7 @@
 - Console: LEFT=0 RIGHT=1 UP=2 DOWN=3 BTN_Z=4(B) BTN_X=5(X) BTN_F=12(Y) BTN_G=13(A) BTN_Q=14(L) BTN_E=15(R),
   sem START/SELECT; btn retorna false ou numero 0-255; as docs dizem cor RGB555, MAS o lupi-codec oficial gera BGR555 e o primeiro-jogo usa direto -> use BGR555; tem ui.circ, ui.stat, sfx.*.
 - Todo frame: ui.clip(0,0,480,270), ui.camera(0,0) e reaplicar a paleta (padrao do primeiro-jogo oficial).
+- No console `Sprites.<pasta>[nome]` NAO tem width/height (so no SDK): guarde o tamanho do PNG numa constante.
 - Detectar com `BTN_X ~= nil`. NUNCA usar numero cru de botao no console (erro = tela preta).
 - src/game.lua e um loader que roda src/jogo.lua com pcall e mostra o erro NA TELA.
 - Deploy no console: fork github.com/davidogral/primeiro-jogo (de lupi-org-br/primeiro-jogo), com game.lua + jogo.lua na raiz.
