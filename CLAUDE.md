@@ -51,5 +51,7 @@ Cores sao indices de paleta 0-255. `ui.palset(i, bgr555)` define a cor: bits 0-4
 - NAO existe API de som.
 
 ## Boas praticas
+- Desempenho: textos montados 1x no load (sem `..` no update), pools fixos (24 tiros, 40 particulas, 10 asteroides),
+  GC geracional; medidor FPS/MEM na tela de pausa (ui.stat no console). Lixo medido: ~0.3 KB a cada 200 frames.
 - Nao crie tabelas dentro de update() (use pools pre-alocados) para evitar engasgos de GC.
 - Toda config/balanceamento no topo do arquivo.
