@@ -1,4 +1,4 @@
-# Jogo para o console Lupi (game jam de 1h)
+# ALTER.EXE - jogo para o console Lupi (game jam de 1h, tema FALHA NO SISTEMA)
 
 ## Regras da jam
 - IA so pode ser usada para CODIGO. NUNCA gere, desenhe ou edite assets (PNG, sprites, mapas, sons).
