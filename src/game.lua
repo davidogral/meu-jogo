@@ -13,6 +13,9 @@ local VIDAS = 3
 local VEL, VEL_TIRO, RECARGA = 3, 6, 18
 local AVISO_FRAMES = 90                       -- 1.5s de aviso
 local INTERVALO_MIN, INTERVALO_MAX = 360, 720 -- 6s a 12s entre eventos
+local RODADAS_PARA_VENCER = 2                 -- melhor de 3
+local CONTAGEM_PASSO, CONTAGEM_JA = 45, 30    -- frames de cada "3, 2, 1" e do "JA!"
+local PAUSA_RODADA = 120                      -- frames mostrando quem venceu a rodada
 
 -- ================= CPU (IA por regras) =================
 -- reacao: frames entre decisoes | erro: +-px no Y mirado | desvio: chance de fugir de tiro
@@ -85,6 +88,8 @@ local T = TEMAS[TEMA_ATUAL]
 local estado = "titulo"
 local dif_idx, dif, hud2 = DIF_INICIAL, nil, ""
 local frame, shake, vencedor, players
+local placar, rodada, cont_t = { 0, 0 }, 1, 0
+local TXT_CONT = { "1", "2", "3" }
 local fase, timer, evento, prox_evento
 
 local MAX_TIROS, MAX_PART = 20, 40
@@ -140,6 +145,8 @@ local function forma(f, x, y, w, h, cor, dir)
 end
 
 -- ================= LOGICA =================
+local nova_rodada
+
 local function sorteia_evento()
   local lista = T.eventos
   prox_evento = EVENTOS[lista[math.random(1, #lista)]]
@@ -152,17 +159,30 @@ local function novo_player(id, x, cor, dir)
            cpu = id == 2, reacao = 0, erro = 0, desvio = 0, cont = 0, alvo_y = H / 2 - 8, quer_atirar = false }
 end
 
+-- Reinicia so a rodada (vidas, posicoes, tiros, eventos); mantem placar e o ajuste da IA.
+nova_rodada = function()
+  for i = 1, 2 do
+    local p = players[i]
+    p.y, p.vidas, p.recarga, p.hit = H / 2 - 8, VIDAS, 0, 0
+    p.x = i == 1 and 30 or W - 46
+    p.cont, p.quer_atirar, p.alvo_y = 0, false, p.y
+  end
+  for i = 1, MAX_TIROS do tiros[i].ativo = false end
+  shake, vencedor = 0, nil
+  fase, timer, evento = "normal", math.random(INTERVALO_MIN, INTERVALO_MAX), nil
+  sorteia_evento()
+  estado, cont_t = "contagem", 3 * CONTAGEM_PASSO + CONTAGEM_JA
+end
+
 local function reset()
   dif = DIFICULDADES[ORDEM_DIF[dif_idx]]
   hud2 = T.nome2 .. " [" .. dif.nome .. "]"
   players = { novo_player(1, 30, T.cor1, 1), novo_player(2, W - 46, T.cor2, -1) }
   local c = players[2]
   c.reacao, c.erro, c.desvio = dif.reacao, dif.erro, dif.desvio
-  for i = 1, MAX_TIROS do tiros[i].ativo = false end
-  for i = 1, MAX_PART do parts[i].vida = 0 end
-  frame, shake, vencedor = 0, 0, nil
-  fase, timer, evento = "normal", math.random(INTERVALO_MIN, INTERVALO_MAX), nil
-  sorteia_evento()
+  placar[1], placar[2], rodada = 0, 0, 1
+  frame = 0
+  nova_rodada()
 end
 
 local function atualiza_eventos()
@@ -266,7 +286,7 @@ local function atualiza_tiros()
       t.x = t.x + t.dir * t.v
       if t.x < -8 or t.x > W + 8 then t.ativo = false end
       local alvo = players[t.dono == 1 and 2 or 1]
-      if t.ativo and alvo.hit == 0 and t.x < alvo.x + alvo.w and t.x + 5 > alvo.x
+      if t.ativo and estado == "jogo" and alvo.hit == 0 and t.x < alvo.x + alvo.w and t.x + 5 > alvo.x
          and t.y < alvo.y + alvo.h and t.y + 5 > alvo.y then
         t.ativo = false
         alvo.vidas, alvo.hit, shake = alvo.vidas - 1, 45, 12
@@ -274,7 +294,10 @@ local function atualiza_tiros()
         explode(alvo.x + 8, alvo.y + 8, alvo.cor, 12)
         if alvo.vidas <= 0 then
           explode(alvo.x + 8, alvo.y + 8, BRANCO, 25)
-          vencedor, estado, shake = t.dono, "fim", 25
+          placar[t.dono] = placar[t.dono] + 1
+          vencedor, shake = t.dono, 25
+          if placar[t.dono] >= RODADAS_PARA_VENCER then estado = "fim"
+          else estado, cont_t = "entre", PAUSA_RODADA end
         end
       end
     end
@@ -357,10 +380,17 @@ function update()
       centro(i == dif_idx and ("> " .. d.nome .. " <") or d.nome, 158 + i * 12, i == dif_idx and AMAR or CINZA)
     end
     if (frame // 30) % 2 == 0 then centro("cima/baixo: dificuldade   K: comecar", 222, VERDE) end
-    if apertou(ACAO) then reset(); estado = "jogo" end
+    if apertou(ACAO) then reset() end
     return
   end
 
+  if estado == "contagem" then
+    cont_t = cont_t - 1
+    if cont_t <= 0 then estado = "jogo" end
+  elseif estado == "entre" then
+    cont_t = cont_t - 1
+    if cont_t <= 0 then rodada = rodada + 1; nova_rodada() end
+  end
   if estado == "jogo" then
     atualiza_eventos()
     atualiza_player(players[1])
@@ -390,10 +420,24 @@ function update()
   ui.camera()
   desenha_hud()
   if estado == "jogo" then desenha_evento() end
+  centro(placar[1] .. " x " .. placar[2], 6, BRANCO)
+  if estado == "contagem" then
+    centro("RODADA " .. rodada, 105, AMAR)
+    if cont_t > CONTAGEM_JA then
+      ui.rect(MEIO - 14, 122, MEIO + 14, 146, BRANCO)
+      centro(TXT_CONT[(cont_t - CONTAGEM_JA - 1) // CONTAGEM_PASSO + 1], 130, BRANCO)
+    else
+      ui.rect(MEIO - 20, 122, MEIO + 20, 146, VERDE)
+      centro("JA!", 130, VERDE)
+    end
+  elseif estado == "entre" then
+    centro(vencedor == 1 and "VOCE VENCEU A RODADA" or "CPU VENCEU A RODADA", 115, vencedor == 1 and T.cor1 or T.cor2)
+  end
 
   if estado == "fim" then
     centro(vencedor == 1 and "VOCE VENCEU!" or "CPU VENCEU!", 115, vencedor == 1 and T.cor1 or T.cor2)
+    centro("placar final " .. placar[1] .. " x " .. placar[2], 130, AMAR)
     if (frame // 30) % 2 == 0 then centro("K para revanche", 145, BRANCO) end
-    if apertou(ACAO) then reset(); estado = "jogo" end
+    if apertou(ACAO) then reset() end
   end
 end
