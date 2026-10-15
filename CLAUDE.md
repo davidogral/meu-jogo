@@ -10,7 +10,10 @@
 - Entrada: src/game.lua, que define `update()`, chamada todo frame (logica + desenho).
 - Dev: container Docker lupi-sdk na porta 8765 -> http://localhost:8765/webgame/game.html (rebuild ao salvar src/).
 - Commit: .gitignore ignora src/, entao SEMPRE `git add -f src/ CLAUDE.md`.
-- PNG: max 512x512, ate 256 cores. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
+- PNG: max 512x512, ate 256 cores. O codec gera palette.lua (`Palette`) e os sprites usam os indices 0..#Palette-1:
+  aplique `Palette` e ponha as cores do jogo DEPOIS (BASE = #Palette), senao os sprites ficam com cor errada.
+- Naves: src/naves/sparrow-cream.png e sparrow-slate.png (Cozy Space Ships, Bramble & Byte, CC-BY 4.0, credito no titulo).
+  Copiados sem alteracao; a equipe gira 90 graus horario (apontar para a direita); a CPU e espelhada no codigo. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
 - Mapas Tiled (.json) viram script Lua.
 
 ## DOIS FIRMWARES (importante)
