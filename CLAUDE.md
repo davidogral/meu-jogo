@@ -13,7 +13,7 @@
 - PNG: max 512x512, ate 256 cores. O codec gera palette.lua (`Palette`) e os sprites usam os indices 0..#Palette-1:
   aplique `Palette` e ponha as cores do jogo DEPOIS (BASE = #Palette), senao os sprites ficam com cor errada.
 - Naves: src/naves/sparrow-cream.png e sparrow-slate.png (Cozy Space Ships, Bramble & Byte, CC-BY 4.0, credito no titulo).
-  Copiados sem alteracao; a equipe gira 90 graus horario (apontar para a direita); a CPU e espelhada no codigo. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
+  Girados 90 graus horario (apontam para a direita) a pedido do usuario em 2026-10-15; a CPU e espelhada no codigo. Viram `Sprites.<pasta>["<nome>"]` via `require("sprites")`.
 - Mapas Tiled (.json) viram script Lua.
 
 ## DOIS FIRMWARES (importante)
