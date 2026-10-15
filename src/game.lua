@@ -9,6 +9,8 @@ local TEMA_ATUAL = "falha"    -- falha | padrao | espaco | faroeste | magia
 -- O teclado e checado ignorando o pad, e o console tem 1 controle (pad 0).
 local PAD1 = 0
 local ACAO = BTN_Z
+-- Controle de SNES: aceita qualquer botao de face como acao (B=BTN_Z, Y=BTN_E, X=BTN_Q, A=6 RIGHT_FACE_RIGHT)
+local BTN_A_SNES = 6
 local VIDAS = 3
 local VEL, VEL_TIRO, RECARGA = 3, 6, 18
 local AVISO_FRAMES = 90                       -- 1.5s de aviso
@@ -101,7 +103,12 @@ local estrelas = {}
 for i = 1, 40 do estrelas[i] = { x = math.random(0, W), y = math.random(0, H), v = math.random(1, 3) } end
 
 -- ================= UTIL =================
-local function apertou(b) return ui.btnp(b, PAD1) end
+local function apertou(b)
+  if b == ACAO then
+    return ui.btnp(BTN_Z, PAD1) or ui.btnp(BTN_E, PAD1) or ui.btnp(BTN_Q, PAD1) or ui.btnp(BTN_A_SNES, PAD1)
+  end
+  return ui.btnp(b, PAD1)
+end
 local function centro(txt, y, cor)
   ui.print(txt, math.floor(W / 2 - #txt * 3), y, cor)
 end
@@ -261,7 +268,7 @@ local function atualiza_player(p)
     if ui.btn(UP, PAD1) then dy = dy - 1 end
     if ui.btn(DOWN, PAD1) then dy = dy + 1 end
     if fase == "ativo" and evento.inv then dx, dy = -dx, -dy end
-    atira = ui.btnp(ACAO, PAD1)
+    atira = apertou(ACAO)
   end
 
   local v = VEL * mod("vel")
