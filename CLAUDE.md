@@ -21,7 +21,7 @@
 ## DOIS FIRMWARES (importante)
 - SDK lupinho 1.1.0 (Docker, porta 8765) != console real / docs https://lupi.api.br/docs/.
 - Console: LEFT=0 RIGHT=1 UP=2 DOWN=3 BTN_Z=4(B) BTN_X=5(X) BTN_F=12(Y) BTN_G=13(A) BTN_Q=14(L) BTN_E=15(R),
-  sem START/SELECT; btn retorna false ou numero 0-255; as docs dizem cor RGB555, MAS o lupi-codec oficial gera BGR555 e o primeiro-jogo usa direto -> use BGR555; tem ui.circ, ui.stat, sfx.*.
+  START = 6 (descoberto no console; nao documentado), SELECT ainda desconhecido; btn retorna false ou numero 0-255; as docs dizem cor RGB555, MAS o lupi-codec oficial gera BGR555 e o primeiro-jogo usa direto -> use BGR555; tem ui.circ, ui.stat, sfx.*.
 - Todo frame: ui.clip(0,0,480,270), ui.camera(0,0) e reaplicar a paleta (padrao do primeiro-jogo oficial).
 - No console `Sprites.<pasta>[nome]` NAO tem width/height (so no SDK): guarde o tamanho do PNG numa constante.
 - NAO use ui.btnp no console: ele repete enquanto segura (estilo PICO-8; pausa despausava sozinha). Detecte o toque com ui.btn (agora e nao no frame anterior), 1x por frame.
