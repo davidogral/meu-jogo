@@ -33,6 +33,7 @@
 - Console: ui.btn pode devolver numero (pressao); trate 0 como NAO apertado (`v == true or v > 0`).
 - Console: mantenha poucos comandos de desenho por frame (tiros em codigo, sem sprite de projetil). A PALETA TEM QUE SER INTEIRA TODO FRAME: em fatias a tela piscou preto no console.
 - Evite ui.clip por objeto todo frame no console (ex.: animar spritesheet recortando com clip): travou o jogo com muitos tiros. Prefira desenho em codigo ou 1 sprite por quadro.
+- Console: apertar os OMBROS (L=BTN_Q, R=BTN_E) derruba o FPS (firmware), mesmo sem acao no jogo. Use L/R so para acoes raras; acoes frequentes nos botoes de face.
 - Detectar com `BTN_X ~= nil`. NUNCA usar numero cru de botao no console (erro = tela preta).
 - src/game.lua e um loader que roda src/jogo.lua com pcall e mostra o erro NA TELA.
 - Deploy no console: fork github.com/davidogral/primeiro-jogo (de lupi-org-br/primeiro-jogo), com game.lua + jogo.lua na raiz.
